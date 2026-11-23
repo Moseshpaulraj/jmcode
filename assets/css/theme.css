@@ -257,18 +257,99 @@ section,
   color: transparent;
 }
 
-/* Mobile menu panel */
+/* Mobile menu: compact dropdown card instead of a full-screen sheet */
 @media (max-width: 1199px) {
   .navmenu ul {
-    background: var(--nav-mobile-background-color);
+    display: block;
+    position: fixed;
+    top: 80px;
+    right: 16px;
+    bottom: auto;
+    left: auto;
+    width: min(230px, calc(100vw - 32px));
+    max-height: calc(100vh - 100px);
+    padding: 8px;
+    border-radius: 20px;
+    background: var(--glass-bg-strong);
     border: 1px solid var(--glass-border);
-    border-radius: 18px;
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
+    box-shadow: var(--glass-shadow), 0 20px 50px rgba(0, 0, 0, 0.25);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-10px) scale(0.94);
+    transform-origin: top right;
+    transition: opacity 0.25s ease, transform 0.35s cubic-bezier(.2, .9, .3, 1.15), visibility 0.25s;
   }
 
+  .mobile-nav-active .navmenu > ul {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .navmenu ul li + li {
+    margin-top: 2px;
+  }
+
+  .navmenu a,
+  .navmenu a:focus {
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--nav-color);
+  }
+
+  .navmenu a:hover {
+    background: color-mix(in srgb, var(--accent-color), transparent 90%);
+    color: var(--nav-hover-color);
+  }
+
+  .navmenu .active,
+  .navmenu .active:focus {
+    background: color-mix(in srgb, var(--accent-color), transparent 84%);
+    color: var(--nav-hover-color);
+    font-weight: 600;
+  }
+
+  /* stagger links in */
+  .navmenu ul li {
+    opacity: 0;
+    transform: translateX(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .mobile-nav-active .navmenu ul li { opacity: 1; transform: none; }
+  .mobile-nav-active .navmenu ul li:nth-child(1) { transition-delay: 0.04s; }
+  .mobile-nav-active .navmenu ul li:nth-child(2) { transition-delay: 0.08s; }
+  .mobile-nav-active .navmenu ul li:nth-child(3) { transition-delay: 0.12s; }
+  .mobile-nav-active .navmenu ul li:nth-child(4) { transition-delay: 0.16s; }
+  .mobile-nav-active .navmenu ul li:nth-child(5) { transition-delay: 0.20s; }
+
+  /* light dim behind the card; tap it to close */
   .mobile-nav-active .navmenu {
-    background: rgba(5, 6, 15, 0.55);
+    background: rgba(5, 6, 15, 0.3);
+  }
+
+  :root[data-theme="light"] .mobile-nav-active .navmenu {
+    background: rgba(60, 40, 30, 0.12);
+  }
+
+  /* the open menu leaves the header flow; hold the theme button's spot
+     (hamburger 28px + its 10px margin + toggle's own 8px) */
+  .mobile-nav-active .theme-toggle {
+    margin-right: 46px;
+  }
+
+  /* keep the close (X) where the hamburger was */
+  .mobile-nav-active .mobile-nav-toggle {
+    top: 24px;
+    right: 25px;
+    font-size: 28px;
+    color: var(--heading-color);
   }
 }
 
